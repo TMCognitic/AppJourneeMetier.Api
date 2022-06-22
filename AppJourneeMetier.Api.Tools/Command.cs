@@ -11,7 +11,7 @@
             Parameters = new Dictionary<string, object>();
         }
 
-        public void AddParameter(string parameterName, object value)
+        public void AddParameter(string parameterName, object? value)
         {
             Parameters.Add(parameterName, value ?? DBNull.Value);
         }

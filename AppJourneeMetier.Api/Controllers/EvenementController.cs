@@ -19,7 +19,7 @@ namespace AppJourneeMetier.Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            Command command = new Command("SELECT [IdEvenement], [DateDebut], [DateFin], [Titre], [Description], [IdCategorie], [Prix] FROM Evenement;");
+            Command command = new Command("SELECT [IdEvenement], [DateDebut], [DateFin], [Titre], [Description], [IdCategorie], [Prix] FROM [Evenement];");
             using(_dbConnection)
             {
                 return Ok(_dbConnection.ExecuteReader(command, (dr) => new Evenement() { IdEvenement = (int)dr["IdEvenement"], DateDebut = (DateTime)dr["DateDebut"], DateFin = (DateTime)dr["DateFin"], Titre = (string)dr["Titre"], Description = (string)dr["Description"], IdCategorie = (int)dr["IdCategorie"], Prix = (decimal)dr["Prix"] }).ToList());
@@ -30,7 +30,7 @@ namespace AppJourneeMetier.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            Command command = new Command("SELECT [IdEvenement], [DateDebut], [DateFin], [Titre], [Description], [IdCategorie], [Prix] FROM Evenement WHERE IdEvenement = @IdEvenement;");
+            Command command = new Command("SELECT [IdEvenement], [DateDebut], [DateFin], [Titre], [Description], [IdCategorie], [Prix] FROM [Evenement] WHERE [IdEvenement] = @IdEvenement;");
             command.AddParameter("IdEvenement", id);
             using (_dbConnection)
             {
@@ -46,7 +46,12 @@ namespace AppJourneeMetier.Api.Controllers
         [HttpGet("ByCategory/{idCategorie}")]
         public IActionResult GetByCategory(int idCategorie)
         {
-            throw new NotImplementedException();
+            Command command = new Command("SELECT [IdEvenement], [DateDebut], [DateFin], [Titre], [Description], [IdCategorie], [Prix] FROM [Evenement] WHERE [IdCategorie] = @IdCategory;");
+            command.AddParameter("IdCategory", idCategorie);
+            using (_dbConnection)
+            {
+                return Ok(_dbConnection.ExecuteReader(command, (dr) => new Evenement() { IdEvenement = (int)dr["IdEvenement"], DateDebut = (DateTime)dr["DateDebut"], DateFin = (DateTime)dr["DateFin"], Titre = (string)dr["Titre"], Description = (string)dr["Description"], IdCategorie = (int)dr["IdCategorie"], Prix = (decimal)dr["Prix"] }).ToList());
+            }
         }
     }
 }
